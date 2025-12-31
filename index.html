@@ -41,174 +41,113 @@
             margin: 0 auto;
         }
         
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 10px;
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
         
-        header h1 {
+        .header-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .header-info h1 {
             font-size: 1.8rem;
             margin-bottom: 5px;
             font-weight: 600;
             color: var(--primary-color);
         }
         
-        header p {
+        .header-info p {
             font-size: 0.9rem;
             color: var(--gray-color);
-            max-width: 800px;
-            margin: 0 auto;
         }
         
-        .upload-section {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: var(--transition);
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .upload-section.compact {
-            padding: 12px 20px;
-            max-width: 100%;
-        }
-        
-        .upload-section:hover {
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-        }
-        
-        .upload-container {
+        .upload-box {
+            flex: 0 0 auto;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
         
-        @media (max-width: 768px) {
-            .upload-container {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-        
-        .upload-area {
-            flex: 1;
+        .upload-area-compact {
             border: 2px dashed #ddd;
             border-radius: var(--border-radius);
-            padding: 25px 20px;
+            padding: 12px 20px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
-            min-height: 140px;
+            background-color: white;
+            box-shadow: var(--box-shadow);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            height: 100px;
+            min-width: 280px;
         }
         
-        .upload-area.compact {
-            padding: 12px 15px;
-            min-height: auto;
-            border-width: 1px;
-            flex: 0 0 auto;
-            width: 300px;
-        }
-        
-        .upload-area:hover {
+        .upload-area-compact:hover {
             border-color: var(--primary-color);
             background-color: rgba(74, 111, 165, 0.05);
         }
         
-        .upload-area i {
-            font-size: 2.2rem;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-        
-        .upload-area.compact i {
+        .upload-area-compact i {
             font-size: 1.5rem;
+            color: var(--primary-color);
             margin-bottom: 5px;
         }
         
-        .upload-area h3 {
-            margin-bottom: 8px;
+        .upload-area-compact h3 {
+            margin-bottom: 5px;
             color: var(--dark-color);
-            font-size: 1.1rem;
-        }
-        
-        .upload-area.compact h3 {
             font-size: 0.95rem;
-            margin-bottom: 4px;
+            white-space: nowrap;
         }
         
-        .upload-area p {
+        .upload-area-compact p {
             color: var(--gray-color);
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-        }
-        
-        .upload-area.compact p {
             font-size: 0.8rem;
             margin-bottom: 8px;
         }
         
-        .upload-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            min-width: 200px;
-        }
-        
-        .upload-actions.compact {
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            min-width: auto;
-            width: 100%;
-        }
-        
-        .file-info {
-            padding: 12px 15px;
-            background-color: #f8f9fa;
-            border-radius: var(--border-radius);
-            font-size: 0.9rem;
-        }
-        
-        .file-info.compact {
-            padding: 8px 12px;
+        .file-info-compact {
             font-size: 0.85rem;
-            background-color: transparent;
-            padding: 0;
+            background-color: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            min-width: 200px;
+            display: none;
         }
         
-        .file-info div {
+        .file-info-compact.active {
+            display: block;
+        }
+        
+        .file-info-compact div {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        
-        .file-info.compact div {
             margin-bottom: 3px;
         }
         
-        .file-info span:first-child {
+        .file-info-compact span:first-child {
             font-weight: 600;
             color: var(--primary-color);
         }
         
         .btn {
             display: inline-block;
-            padding: 10px 18px;
+            padding: 8px 16px;
             background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             transition: var(--transition);
             text-align: center;
@@ -238,11 +177,6 @@
         }
         
         .btn-small {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-        }
-        
-        .btn-compact {
             padding: 5px 10px;
             font-size: 0.8rem;
         }
@@ -257,8 +191,7 @@
         .main-content {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 25px;
         }
         
         .preview-section {
@@ -267,7 +200,6 @@
             box-shadow: var(--box-shadow);
             padding: 20px;
             transition: var(--transition);
-            flex: 1;
         }
         
         .preview-section:hover {
@@ -296,7 +228,7 @@
         
         .pdf-preview {
             width: 100%;
-            height: 450px;
+            height: 500px;
             border: 1px solid #eee;
             border-radius: var(--border-radius);
             overflow: auto;
@@ -313,9 +245,16 @@
             gap: 15px;
         }
         
+        .preview-top-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
         .page-navigation {
             display: flex;
-            justify-content: center;
             align-items: center;
             gap: 15px;
         }
@@ -327,11 +266,9 @@
             text-align: center;
         }
         
-        .export-actions {
+        .preview-actions {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 10px;
+            gap: 10px;
         }
         
         .drag-instruction {
@@ -366,12 +303,12 @@
         }
         
         .pages-list {
-            max-height: 300px;
+            max-height: 250px;
             overflow-y: auto;
             border: 1px solid #eee;
             border-radius: var(--border-radius);
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
             gap: 10px;
             padding: 15px;
             background-color: #f9f9f9;
@@ -382,7 +319,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px 5px;
+            padding: 8px 5px;
             border-radius: 6px;
             background-color: white;
             border: 2px solid transparent;
@@ -403,8 +340,8 @@
         }
         
         .page-preview {
-            width: 55px;
-            height: 70px;
+            width: 50px;
+            height: 65px;
             background-color: #f1f5f9;
             border-radius: 4px;
             display: flex;
@@ -413,21 +350,21 @@
             font-weight: bold;
             color: var(--primary-color);
             overflow: hidden;
-            margin-bottom: 6px;
-            font-size: 1.8rem;
+            margin-bottom: 5px;
+            font-size: 1.6rem;
         }
         
         .page-number {
             font-weight: 600;
             color: var(--dark-color);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin-bottom: 2px;
         }
         
         .page-actions {
             display: flex;
             gap: 4px;
-            margin-top: 4px;
+            margin-top: 3px;
         }
         
         .drag-handle {
@@ -436,7 +373,7 @@
             left: 3px;
             color: var(--gray-color);
             cursor: move;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
         
         .pages-controls {
@@ -505,42 +442,54 @@
         }
         
         /* 响应式调整 */
-        @media (max-width: 768px) {
-            .upload-section {
-                padding: 15px;
-            }
-            
-            .upload-area.compact {
-                width: 100%;
-            }
-            
-            .upload-actions.compact {
+        @media (max-width: 900px) {
+            .header-section {
                 flex-direction: column;
                 align-items: stretch;
             }
             
-            .preview-section, .pages-management {
-                padding: 15px;
+            .upload-box {
+                flex-direction: column;
+                align-items: stretch;
             }
             
+            .upload-area-compact {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .file-info-compact {
+                width: 100%;
+            }
+            
+            .preview-top-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .preview-actions {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
             .pages-list {
-                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
                 padding: 10px;
                 gap: 8px;
             }
             
             .page-preview {
-                width: 50px;
-                height: 65px;
-                font-size: 1.6rem;
+                width: 45px;
+                height: 60px;
+                font-size: 1.4rem;
+            }
+            
+            .pdf-preview {
+                height: 400px;
             }
             
             .pages-controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .export-actions {
                 flex-direction: column;
                 align-items: center;
             }
@@ -552,57 +501,59 @@
         
         @media (max-width: 480px) {
             .pages-list {
-                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
             }
             
             .page-preview {
-                width: 45px;
-                height: 55px;
-                font-size: 1.4rem;
+                width: 40px;
+                height: 50px;
+                font-size: 1.2rem;
             }
             
             .pdf-preview {
                 height: 350px;
             }
         }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #pdfInput {
+            display: none;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><i class="fas fa-file-pdf"></i> PDF处理工具</h1>
-            <p>在浏览器端调整PDF页面顺序和删除页面 - 完全免费，无需上传，保护您的隐私</p>
-        </header>
-        
-        <!-- 上传区域 - 顶部紧凑设计，上传后自动缩小 -->
-        <div id="uploadSection" class="upload-section">
-            <div id="uploadContainer" class="upload-container">
-                <div id="uploadArea" class="upload-area">
+        <!-- 标题和上传框在同一行 -->
+        <div class="header-section">
+            <div class="header-info">
+                <h1><i class="fas fa-file-pdf"></i> PDF处理工具</h1>
+                <p>在浏览器端调整PDF页面顺序和删除页面 - 完全免费，无需上传，保护您的隐私</p>
+            </div>
+            
+            <div class="upload-box">
+                <div id="uploadAreaCompact" class="upload-area-compact">
                     <i class="fas fa-cloud-upload-alt"></i>
-                    <h3>点击或拖拽上传PDF文件</h3>
-                    <p>支持最大25MB的PDF文件</p>
+                    <h3>点击或拖拽上传PDF</h3>
+                    <p>支持最大25MB的文件</p>
                     <button id="uploadBtn" class="btn btn-small">
-                        <i class="fas fa-folder-open"></i> 选择PDF文件
+                        <i class="fas fa-folder-open"></i> 选择文件
                     </button>
-                    <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
+                    <input type="file" id="pdfInput" accept=".pdf">
                 </div>
                 
-                <div id="uploadActions" class="upload-actions">
-                    <div id="fileInfo" class="file-info" style="display: none;">
-                        <div>
-                            <span><i class="fas fa-file-pdf"></i> 文件名:</span>
-                            <span id="fileName">未选择</span>
-                        </div>
-                        <div>
-                            <span><i class="fas fa-layer-group"></i> 总页数:</span>
-                            <span id="pageCount">0 页</span>
-                        </div>
+                <div id="fileInfoCompact" class="file-info-compact">
+                    <div>
+                        <span><i class="fas fa-file-pdf"></i> 文件:</span>
+                        <span id="fileName">未选择</span>
                     </div>
-                    
-                    <button id="clearBtn" class="btn btn-danger">
-                        <i class="fas fa-times"></i> 清除所有
-                    </button>
+                    <div>
+                        <span><i class="fas fa-layer-group"></i> 页数:</span>
+                        <span id="pageCount">0 页</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -628,20 +579,25 @@
                     </div>
                     
                     <div class="preview-controls">
-                        <div class="page-navigation">
-                            <button id="prevPageBtn" class="btn btn-small" disabled>
-                                <i class="fas fa-chevron-left"></i> 上一页
-                            </button>
-                            <span id="pageCounter" class="page-counter">- / -</span>
-                            <button id="nextPageBtn" class="btn btn-small" disabled>
-                                下一页 <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="export-actions">
-                            <button id="exportBtn" class="btn btn-success" disabled>
-                                <i class="fas fa-download"></i> 导出处理后的PDF
-                            </button>
+                        <div class="preview-top-controls">
+                            <div class="page-navigation">
+                                <button id="prevPageBtn" class="btn btn-small" disabled>
+                                    <i class="fas fa-chevron-left"></i> 上一页
+                                </button>
+                                <span id="pageCounter" class="page-counter">- / -</span>
+                                <button id="nextPageBtn" class="btn btn-small" disabled>
+                                    下一页 <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="preview-actions">
+                                <button id="exportBtn" class="btn btn-success" disabled>
+                                    <i class="fas fa-download"></i> 导出PDF
+                                </button>
+                                <button id="clearBtn" class="btn btn-danger">
+                                    <i class="fas fa-times"></i> 清除
+                                </button>
+                            </div>
                         </div>
                         
                         <div class="drag-instruction">
@@ -651,13 +607,13 @@
                 </div>
             </div>
             
-            <!-- 页面管理区域 - 最底部 -->
+            <!-- 页面管理区域 - 在预览框下面 -->
             <div class="pages-management">
                 <div class="section-title">
                     <i class="fas fa-cogs"></i> 页面管理
                 </div>
                 
-                <div id="pageManagement" style="display: none;">
+                <div id="pageManagement" class="hidden">
                     <div class="pages-container">
                         <div class="pages-list" id="pagesList">
                             <!-- 页面列表将在这里动态生成 -->
@@ -665,22 +621,22 @@
                     </div>
                     
                     <div class="pages-controls">
-                        <button id="selectAllBtn" class="btn btn-small btn-compact">
+                        <button id="selectAllBtn" class="btn btn-small">
                             <i class="fas fa-check-double"></i> 全选
                         </button>
-                        <button id="deselectAllBtn" class="btn btn-small btn-compact">
+                        <button id="deselectAllBtn" class="btn btn-small">
                             <i class="fas fa-times"></i> 取消
                         </button>
-                        <button id="moveUpBtn" class="btn btn-small btn-compact" disabled>
+                        <button id="moveUpBtn" class="btn btn-small" disabled>
                             <i class="fas fa-arrow-up"></i> 上移
                         </button>
-                        <button id="moveDownBtn" class="btn btn-small btn-compact" disabled>
+                        <button id="moveDownBtn" class="btn btn-small" disabled>
                             <i class="fas fa-arrow-down"></i> 下移
                         </button>
-                        <button id="deleteBtn" class="btn btn-small btn-compact btn-danger" disabled>
+                        <button id="deleteBtn" class="btn btn-small btn-danger" disabled>
                             <i class="fas fa-trash"></i> 删除
                         </button>
-                        <button id="resetBtn" class="btn btn-small btn-compact">
+                        <button id="resetBtn" class="btn btn-small">
                             <i class="fas fa-redo"></i> 重置
                         </button>
                     </div>
@@ -696,10 +652,10 @@
         <div class="instructions">
             <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
             <ol>
-                <li><strong>上传PDF</strong>：点击"选择PDF文件"按钮或拖拽PDF文件到上传区域</li>
+                <li><strong>上传PDF</strong>：点击"选择文件"按钮或拖拽PDF文件到上传区域</li>
                 <li><strong>管理页面</strong>：在下方页面管理区域，点击选择页面，然后执行操作：调整顺序、删除页面</li>
                 <li><strong>预览</strong>：在上方预览区域查看PDF页面，使用上下页按钮导航</li>
-                <li><strong>导出</strong>：完成页面调整后，点击"导出处理后的PDF"下载新文件</li>
+                <li><strong>导出</strong>：完成页面调整后，点击"导出PDF"下载新文件</li>
                 <li><strong>注意</strong>：所有操作均在浏览器端完成，文件不会上传到任何服务器，保护您的隐私</li>
             </ol>
         </div>
@@ -721,11 +677,8 @@
         // DOM元素
         const pdfInput = document.getElementById('pdfInput');
         const uploadBtn = document.getElementById('uploadBtn');
-        const uploadArea = document.getElementById('uploadArea');
-        const uploadSection = document.getElementById('uploadSection');
-        const uploadContainer = document.getElementById('uploadContainer');
-        const uploadActions = document.getElementById('uploadActions');
-        const fileInfo = document.getElementById('fileInfo');
+        const uploadAreaCompact = document.getElementById('uploadAreaCompact');
+        const fileInfoCompact = document.getElementById('fileInfoCompact');
         const fileName = document.getElementById('fileName');
         const pageCount = document.getElementById('pageCount');
         const pageManagement = document.getElementById('pageManagement');
@@ -749,21 +702,21 @@
         uploadBtn.addEventListener('click', () => pdfInput.click());
         pdfInput.addEventListener('change', handleFileSelect);
         
-        uploadArea.addEventListener('dragover', (e) => {
+        uploadAreaCompact.addEventListener('dragover', (e) => {
             e.preventDefault();
-            uploadArea.style.borderColor = '#4a6fa5';
-            uploadArea.style.backgroundColor = 'rgba(74, 111, 165, 0.05)';
+            uploadAreaCompact.style.borderColor = '#4a6fa5';
+            uploadAreaCompact.style.backgroundColor = 'rgba(74, 111, 165, 0.05)';
         });
         
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.style.borderColor = '#ddd';
-            uploadArea.style.backgroundColor = '';
+        uploadAreaCompact.addEventListener('dragleave', () => {
+            uploadAreaCompact.style.borderColor = '#ddd';
+            uploadAreaCompact.style.backgroundColor = '';
         });
         
-        uploadArea.addEventListener('drop', (e) => {
+        uploadAreaCompact.addEventListener('drop', (e) => {
             e.preventDefault();
-            uploadArea.style.borderColor = '#ddd';
-            uploadArea.style.backgroundColor = '';
+            uploadAreaCompact.style.borderColor = '#ddd';
+            uploadAreaCompact.style.backgroundColor = '';
             
             if (e.dataTransfer.files.length) {
                 pdfInput.files = e.dataTransfer.files;
@@ -801,45 +754,14 @@
                 return;
             }
             
-            fileName.textContent = file.name.length > 25 ? file.name.substring(0, 25) + '...' : file.name;
-            fileInfo.style.display = 'block';
+            fileName.textContent = file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name;
+            fileInfoCompact.classList.add('active');
             
-            // 上传后缩小上传区域
-            makeUploadSectionCompact();
+            // 上传后缩小上传区域文本
+            uploadAreaCompact.querySelector('h3').textContent = '已上传';
+            uploadAreaCompact.querySelector('p').textContent = '点击可重新上传';
             
             loadPDF(file);
-        }
-        
-        // 上传后缩小上传区域
-        function makeUploadSectionCompact() {
-            uploadSection.classList.add('compact');
-            uploadArea.classList.add('compact');
-            uploadActions.classList.add('compact');
-            fileInfo.classList.add('compact');
-            
-            // 更新按钮样式
-            clearBtn.classList.add('btn-compact');
-            
-            // 更新布局
-            uploadContainer.style.flexWrap = 'wrap';
-            uploadContainer.style.justifyContent = 'space-between';
-            uploadContainer.style.alignItems = 'center';
-        }
-        
-        // 恢复上传区域原始大小
-        function restoreUploadSection() {
-            uploadSection.classList.remove('compact');
-            uploadArea.classList.remove('compact');
-            uploadActions.classList.remove('compact');
-            fileInfo.classList.remove('compact');
-            
-            // 恢复按钮样式
-            clearBtn.classList.remove('btn-compact');
-            
-            // 恢复布局
-            uploadContainer.style.flexWrap = '';
-            uploadContainer.style.justifyContent = '';
-            uploadContainer.style.alignItems = '';
         }
         
         // 加载PDF文件
@@ -872,7 +794,7 @@
                     renderPage(currentPage);
                     
                     // 更新UI
-                    pageManagement.style.display = 'block';
+                    pageManagement.classList.remove('hidden');
                     noFileMessage.style.display = 'none';
                     exportBtn.disabled = false;
                     prevPageBtn.disabled = true;
@@ -913,7 +835,7 @@
                         页${pageNum}
                     </div>
                     <div class="page-actions">
-                        <button class="btn btn-small select-page-btn" data-page="${pageNum}" style="padding: 2px 6px; font-size: 0.7rem;">
+                        <button class="btn btn-small select-page-btn" data-page="${pageNum}" style="padding: 2px 5px; font-size: 0.65rem;">
                             ${selectedPages.has(pageNum) ? '<i class="fas fa-check"></i>' : '<i class="far fa-square"></i>'}
                         </button>
                     </div>
@@ -1291,14 +1213,15 @@
                 
                 // 重置UI
                 pdfInput.value = '';
-                fileInfo.style.display = 'none';
-                pageManagement.style.display = 'none';
+                fileInfoCompact.classList.remove('active');
+                pageManagement.classList.add('hidden');
                 noFileMessage.style.display = 'block';
                 pdfPreview.innerHTML = '<div><i class="fas fa-file-pdf" style="font-size: 3rem; margin-bottom: 15px;"></i><p>请先上传PDF文件</p></div>';
                 pageCounter.textContent = '- / -';
                 
-                // 恢复上传区域原始大小
-                restoreUploadSection();
+                // 恢复上传区域文本
+                uploadAreaCompact.querySelector('h3').textContent = '点击或拖拽上传PDF';
+                uploadAreaCompact.querySelector('p').textContent = '支持最大25MB的文件';
                 
                 // 重置按钮状态
                 prevPageBtn.disabled = true;
