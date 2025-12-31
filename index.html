@@ -384,6 +384,7 @@
             font-size: 0.6rem;
             padding: 1px 3px;
             border-radius: 3px;
+            z-index: 2;
         }
         
         .page-preview {
@@ -400,6 +401,25 @@
             margin-bottom: 5px;
             font-size: 1.6rem;
             position: relative;
+        }
+        
+        .page-item.rotated .page-preview {
+            background-color: rgba(243, 156, 18, 0.1);
+        }
+        
+        .rotate-icon {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            font-size: 0.7rem;
+            color: var(--warning-color);
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .page-number {
@@ -927,15 +947,13 @@
                 }
                 
                 // 如果页面有旋转，添加旋转标记
-                if (pageRotations[pageNum] && pageRotations[pageNum] > 0) {
+                const rotation = pageRotations[pageNum] || 0;
+                if (rotation > 0) {
                     pageItem.classList.add('rotated');
                 }
                 
                 pageItem.dataset.page = pageNum;
                 pageItem.dataset.index = index;
-                
-                // 获取旋转角度
-                const rotation = pageRotations[pageNum] || 0;
                 
                 pageItem.innerHTML = `
                     <div class="drag-handle">
@@ -943,6 +961,7 @@
                     </div>
                     <div class="page-preview" style="transform: rotate(${rotation * 90}deg);">
                         ${pageNum}
+                        ${rotation > 0 ? '<i class="fas fa-redo-alt rotate-icon"></i>' : ''}
                     </div>
                     <div class="page-number">
                         页${pageNum} ${rotation > 0 ? `(${rotation * 90}°)` : ''}
