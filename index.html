@@ -1370,7 +1370,7 @@
             pageCounter.textContent = `${currentPage} / ${totalPages}`;
         }
         
-        // 导出PDF - 支持页面旋转
+        // 导出PDF - 修复旋转问题
         async function exportPDF() {
             if (!pdfDoc || pageOrder.length === 0) return;
             
@@ -1380,21 +1380,24 @@
                 // 创建新的PDF文档
                 const { PDFDocument } = PDFLib;
                 
-                // 加载原始PDF
-                const existingPdfBytes = await pdfDoc.getData();
-                const pdfDocNew = await PDFDocument.load(existingPdfBytes);
-                
                 // 创建新的PDF文档
                 const newPdfDoc = await PDFDocument.create();
                 
+                // 获取原始PDF的字节数据
+                const existingPdfBytes = await pdfDoc.getData();
+                const sourcePdfDoc = await PDFDocument.load(existingPdfBytes);
+                
                 // 按新顺序复制页面，并应用旋转
                 for (const pageNum of pageOrder) {
-                    const [copiedPage] = await newPdfDoc.copyPages(pdfDocNew, [pageNum - 1]);
+                    const [copiedPage] = await newPdfDoc.copyPages(sourcePdfDoc, [pageNum - 1]);
                     
                     // 应用旋转角度
                     const rotation = pageRotations[pageNum] || 0;
                     if (rotation > 0) {
-                        copiedPage.setRotation(rotation * 90);
+                        // PDF-Lib中的旋转是顺时针角度：0, 90, 180, 270
+                        // 我们存储的rotation值：0=0°, 1=90°, 2=180°, 3=270°
+                        const rotationAngle = rotation * 90;
+                        copiedPage.setRotation(rotationAngle);
                     }
                     
                     newPdfDoc.addPage(copiedPage);
@@ -1408,7 +1411,12 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `processed_${pdfInput.files[0].name.replace('.pdf', '')}_${new Date().getTime()}.pdf`;
+                
+                // 生成文件名
+                const originalFileName = pdfInput.files[0].name.replace('.pdf', '');
+                const timestamp = new Date().getTime();
+                a.download = `processed_${originalFileName}_${timestamp}.pdf`;
+                
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -1419,7 +1427,7 @@
                 loading.classList.remove('active');
             } catch (error) {
                 console.error('PDF导出错误:', error);
-                alert('PDF导出失败，请重试');
+                alert('PDF导出失败，请重试。错误信息：' + error.message);
                 loading.classList.remove('active');
             }
         }
