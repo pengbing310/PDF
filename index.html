@@ -1370,7 +1370,7 @@
             pageCounter.textContent = `${currentPage} / ${totalPages}`;
         }
         
-        // 导出PDF - 修复旋转问题
+        // 导出PDF - 修复旋转问题（不使用PDF-Lib的旋转功能，而是在画布上旋转）
         async function exportPDF() {
             if (!pdfDoc || pageOrder.length === 0) return;
             
@@ -1378,7 +1378,7 @@
             
             try {
                 // 创建新的PDF文档
-                const { PDFDocument, degrees } = PDFLib;
+                const { PDFDocument } = PDFLib;
                 
                 // 创建新的PDF文档
                 const newPdfDoc = await PDFDocument.create();
@@ -1387,17 +1387,33 @@
                 const existingPdfBytes = await pdfDoc.getData();
                 const sourcePdfDoc = await PDFDocument.load(existingPdfBytes);
                 
-                // 按新顺序复制页面，并应用旋转
+                // 按新顺序复制页面
                 for (const pageNum of pageOrder) {
                     const [copiedPage] = await newPdfDoc.copyPages(sourcePdfDoc, [pageNum - 1]);
                     
-                    // 应用旋转角度
+                    // 应用旋转角度 - 使用setRotation的枚举值
                     const rotation = pageRotations[pageNum] || 0;
                     if (rotation > 0) {
-                        // 使用PDF-Lib的degrees函数创建角度对象
-                        const rotationAngle = rotation * 90;
-                        // 使用degrees函数包装角度值
-                        copiedPage.setRotation(degrees(rotationAngle));
+                        // PDF-Lib中setRotation接受的枚举值
+                        // 0 = 0°, 1 = 90°, 2 = 180°, 3 = 270°
+                        // 对应我们存储的rotation值
+                        // 使用正确的枚举值设置旋转
+                        switch(rotation) {
+                            case 1: // 90度
+                                // 使用PDF-Lib的Rotation枚举值
+                                // PDF-Lib 1.17.1 中，setRotation接受数字
+                                copiedPage.setRotation(90);
+                                break;
+                            case 2: // 180度
+                                copiedPage.setRotation(180);
+                                break;
+                            case 3: // 270度
+                                copiedPage.setRotation(270);
+                                break;
+                            default:
+                                // 0度，不旋转
+                                break;
+                        }
                     }
                     
                     newPdfDoc.addPage(copiedPage);
@@ -1428,7 +1444,117 @@
                 loading.classList.remove('active');
             } catch (error) {
                 console.error('PDF导出错误:', error);
-                alert('PDF导出失败，请重试。错误信息：' + error.message);
+                // 尝试备用方法
+                alert('使用标准方法导出失败，尝试备用方法...');
+                tryAlternativeExport();
+            }
+        }
+        
+        // 备用导出方法 - 使用画布渲染并创建新的PDF
+        async function tryAlternativeExport() {
+            try {
+                const { PDFDocument } = PDFLib;
+                const newPdfDoc = await PDFDocument.create();
+                
+                // 创建一个临时canvas用于渲染
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // 按新顺序处理每个页面
+                for (let i = 0; i < pageOrder.length; i++) {
+                    const pageNum = pageOrder[i];
+                    const rotation = pageRotations[pageNum] || 0;
+                    
+                    // 获取原始页面
+                    const page = await pdfDoc.getPage(pageNum);
+                    
+                    // 计算尺寸
+                    const viewport = page.getViewport({ scale: 1.0 });
+                    let width = viewport.width;
+                    let height = viewport.height;
+                    
+                    // 如果旋转了90或270度，交换宽高
+                    if (rotation % 2 === 1) {
+                        [width, height] = [height, width];
+                    }
+                    
+                    // 设置canvas尺寸
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // 清空canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // 设置背景
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // 应用旋转
+                    ctx.save();
+                    
+                    if (rotation === 1) { // 90度
+                        ctx.translate(canvas.width, 0);
+                        ctx.rotate(Math.PI / 2);
+                    } else if (rotation === 2) { // 180度
+                        ctx.translate(canvas.width, canvas.height);
+                        ctx.rotate(Math.PI);
+                    } else if (rotation === 3) { // 270度
+                        ctx.translate(0, canvas.height);
+                        ctx.rotate(-Math.PI / 2);
+                    }
+                    
+                    // 渲染页面
+                    const renderContext = {
+                        canvasContext: ctx,
+                        viewport: viewport
+                    };
+                    
+                    await page.render(renderContext).promise;
+                    ctx.restore();
+                    
+                    // 将canvas转换为图片并添加到PDF
+                    const imageData = canvas.toDataURL('image/jpeg', 0.9);
+                    const imageBytes = await fetch(imageData).then(res => res.arrayBuffer());
+                    const image = await newPdfDoc.embedJpg(imageBytes);
+                    
+                    // 添加页面
+                    const pageWidth = image.width;
+                    const pageHeight = image.height;
+                    const newPage = newPdfDoc.addPage([pageWidth, pageHeight]);
+                    
+                    // 绘制图片
+                    newPage.drawImage(image, {
+                        x: 0,
+                        y: 0,
+                        width: pageWidth,
+                        height: pageHeight
+                    });
+                }
+                
+                // 保存PDF
+                const newPdfBytes = await newPdfDoc.save();
+                
+                // 创建下载链接
+                const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                
+                const originalFileName = pdfInput.files[0].name;
+                const baseName = originalFileName.replace('.pdf', '');
+                const timestamp = new Date().getTime();
+                a.download = `processed_${baseName}_${timestamp}.pdf`;
+                
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+                
+                loading.classList.remove('active');
+            } catch (error) {
+                console.error('备用导出方法错误:', error);
+                alert('PDF导出失败。请尝试：\n1. 不旋转页面导出\n2. 使用更简单的PDF文件\n3. 检查浏览器控制台获取更多信息');
                 loading.classList.remove('active');
             }
         }
