@@ -1378,7 +1378,7 @@
             
             try {
                 // 创建新的PDF文档
-                const { PDFDocument } = PDFLib;
+                const { PDFDocument, degrees } = PDFLib;
                 
                 // 创建新的PDF文档
                 const newPdfDoc = await PDFDocument.create();
@@ -1394,19 +1394,10 @@
                     // 应用旋转角度
                     const rotation = pageRotations[pageNum] || 0;
                     if (rotation > 0) {
-                        // PDF-Lib中的setRotation方法只接受特定值：0, 90, 180, 270
-                        // 我们存储的rotation值：0=0°, 1=90°, 2=180°, 3=270°
+                        // 使用PDF-Lib的degrees函数创建角度对象
                         const rotationAngle = rotation * 90;
-                        
-                        // 检查是否为有效角度
-                        if ([0, 90, 180, 270].includes(rotationAngle)) {
-                            // 首先获取页面的原始旋转
-                            const originalRotation = copiedPage.getRotation().angle || 0;
-                            
-                            // 设置新的旋转角度
-                            // PDF-Lib的setRotation方法接受角度值
-                            copiedPage.setRotation(rotationAngle);
-                        }
+                        // 使用degrees函数包装角度值
+                        copiedPage.setRotation(degrees(rotationAngle));
                     }
                     
                     newPdfDoc.addPage(copiedPage);
