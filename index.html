@@ -6,6 +6,7 @@
     <title>PDF处理工具 | 调整顺序 & 删除页面</title>
     <!-- 引入PDF.js库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <style>
         :root {
             --primary-color: #4a6fa5;
@@ -42,73 +43,56 @@
         
         header {
             text-align: center;
-            margin-bottom: 40px;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            padding: 20px;
         }
         
         header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
             font-weight: 600;
+            color: var(--primary-color);
         }
         
         header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            font-size: 1rem;
+            color: var(--gray-color);
             max-width: 800px;
             margin: 0 auto;
         }
         
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-        
-        @media (max-width: 900px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .panel {
+        .upload-section {
             background-color: white;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            padding: 25px;
+            padding: 20px;
+            margin-bottom: 25px;
             transition: var(--transition);
         }
         
-        .panel:hover {
+        .upload-section:hover {
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
         }
         
-        .panel-title {
-            font-size: 1.5rem;
+        .section-title {
+            font-size: 1.3rem;
             color: var(--primary-color);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
             display: flex;
             align-items: center;
         }
         
-        .panel-title i {
+        .section-title i {
             margin-right: 10px;
-            font-size: 1.8rem;
         }
         
         .upload-area {
             border: 2px dashed #ddd;
             border-radius: var(--border-radius);
-            padding: 40px 20px;
+            padding: 25px 15px;
             text-align: center;
-            margin-bottom: 25px;
             cursor: pointer;
             transition: var(--transition);
         }
@@ -119,30 +103,32 @@
         }
         
         .upload-area i {
-            font-size: 3rem;
+            font-size: 2.2rem;
             color: var(--primary-color);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .upload-area h3 {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: var(--dark-color);
+            font-size: 1.1rem;
         }
         
         .upload-area p {
             color: var(--gray-color);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
         }
         
         .btn {
             display: inline-block;
-            padding: 12px 24px;
+            padding: 10px 20px;
             background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             transition: var(--transition);
             text-align: center;
@@ -171,8 +157,8 @@
         }
         
         .btn-small {
-            padding: 6px 12px;
-            font-size: 0.9rem;
+            padding: 5px 10px;
+            font-size: 0.85rem;
         }
         
         .btn:disabled {
@@ -182,63 +168,148 @@
             box-shadow: none;
         }
         
+        .file-info {
+            margin-top: 15px;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .file-info span {
+            display: flex;
+            align-items: center;
+        }
+        
+        .file-info i {
+            margin-right: 8px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            transition: var(--transition);
+            height: fit-content;
+        }
+        
+        .panel:hover {
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+        
+        .panel-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .panel-title i {
+            margin-right: 10px;
+        }
+        
+        .pages-container {
+            margin-top: 10px;
+        }
+        
         .pages-list {
-            max-height: 400px;
+            max-height: 320px;
             overflow-y: auto;
-            margin-top: 20px;
             border: 1px solid #eee;
             border-radius: var(--border-radius);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            padding: 15px;
+            background-color: #f9f9f9;
         }
         
         .page-item {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+            padding: 12px 8px;
+            border-radius: 6px;
+            background-color: white;
+            border: 2px solid transparent;
             transition: var(--transition);
+            cursor: pointer;
+            position: relative;
         }
         
         .page-item:hover {
-            background-color: #f9f9f9;
+            border-color: #ddd;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .page-item:last-child {
-            border-bottom: none;
+        .page-item.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(74, 111, 165, 0.1);
         }
         
         .page-preview {
-            width: 60px;
-            height: 80px;
+            width: 70px;
+            height: 90px;
             background-color: #f1f5f9;
             border-radius: 4px;
-            margin-right: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             color: var(--primary-color);
             overflow: hidden;
-        }
-        
-        .page-info {
-            flex: 1;
+            margin-bottom: 8px;
+            font-size: 2.5rem;
         }
         
         .page-number {
             font-weight: 600;
             color: var(--dark-color);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
         }
         
         .page-actions {
             display: flex;
-            gap: 8px;
+            gap: 5px;
+            margin-top: 5px;
         }
         
         .drag-handle {
-            cursor: move;
+            position: absolute;
+            top: 5px;
+            left: 5px;
             color: var(--gray-color);
-            font-size: 1.2rem;
-            padding: 5px;
+            cursor: move;
+            font-size: 0.9rem;
+        }
+        
+        .page-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
         }
         
         .preview-container {
@@ -247,11 +318,11 @@
         
         .pdf-preview {
             width: 100%;
-            height: 400px;
+            height: 380px;
             border: 1px solid #eee;
             border-radius: var(--border-radius);
             overflow: auto;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background-color: #f8f9fa;
             display: flex;
             align-items: center;
@@ -259,7 +330,23 @@
             color: var(--gray-color);
         }
         
-        .controls {
+        .preview-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .page-counter {
+            font-weight: 600;
+            color: var(--dark-color);
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .export-controls {
             display: flex;
             justify-content: center;
             gap: 15px;
@@ -297,11 +384,13 @@
             padding: 15px;
             margin-top: 25px;
             border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            font-size: 0.9rem;
         }
         
         .instructions h3 {
             color: var(--primary-color);
             margin-bottom: 10px;
+            font-size: 1.1rem;
         }
         
         .instructions ol {
@@ -309,7 +398,7 @@
         }
         
         .instructions li {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         
         footer {
@@ -318,33 +407,65 @@
             padding-top: 20px;
             border-top: 1px solid #ddd;
             color: var(--gray-color);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         
-        .file-name {
-            margin-top: 15px;
-            font-weight: 600;
+        .drag-instruction {
+            text-align: center;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .drag-instruction i {
             color: var(--primary-color);
         }
         
         /* 响应式调整 */
         @media (max-width: 768px) {
             header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .panel, .upload-section {
+                padding: 15px;
+            }
+            
+            .pages-list {
+                grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+                padding: 10px;
+            }
+            
+            .page-preview {
+                width: 60px;
+                height: 75px;
                 font-size: 2rem;
             }
             
-            .panel {
-                padding: 20px 15px;
-            }
-            
-            .controls {
+            .page-controls, .export-controls {
                 flex-direction: column;
                 align-items: center;
             }
             
             .btn {
                 width: 100%;
-                margin-bottom: 10px;
+                margin-bottom: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .pages-list {
+                grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+            }
+            
+            .page-preview {
+                width: 50px;
+                height: 65px;
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -357,35 +478,47 @@
             <p>在浏览器端调整PDF页面顺序和删除页面 - 完全免费，无需上传，保护您的隐私</p>
         </header>
         
+        <!-- 上传和管理PDF区域 -->
+        <div class="upload-section">
+            <div class="section-title">
+                <i class="fas fa-upload"></i> 上传和管理PDF
+            </div>
+            
+            <div id="uploadArea" class="upload-area">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>点击或拖拽上传PDF文件</h3>
+                <p>支持最大25MB的PDF文件</p>
+                <button id="uploadBtn" class="btn">
+                    <i class="fas fa-folder-open"></i> 选择PDF文件
+                </button>
+                <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
+            </div>
+            
+            <div id="fileInfo" class="file-info" style="display: none;">
+                <span><i class="fas fa-file-pdf"></i> <span id="fileName">未选择文件</span></span>
+                <span><i class="fas fa-layer-group"></i> <span id="pageCount">0 页</span></span>
+            </div>
+        </div>
+        
         <div class="main-content">
-            <!-- 左侧：文件上传和页面管理 -->
+            <!-- 左侧：页面管理 -->
             <div class="panel">
                 <div class="panel-title">
-                    <i class="fas fa-upload"></i> 上传和管理PDF
+                    <i class="fas fa-cogs"></i> 页面管理
                 </div>
-                
-                <div id="uploadArea" class="upload-area">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <h3>点击或拖拽上传PDF文件</h3>
-                    <p>支持最大25MB的PDF文件</p>
-                    <button id="uploadBtn" class="btn">
-                        <i class="fas fa-folder-open"></i> 选择PDF文件
-                    </button>
-                    <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
-                </div>
-                
-                <div id="fileName" class="file-name"></div>
                 
                 <div id="pageManagement" style="display: none;">
-                    <div class="panel-title">
-                        <i class="fas fa-cogs"></i> 页面管理
+                    <div class="drag-instruction">
+                        <i class="fas fa-arrows-alt"></i> 拖拽页面以调整顺序，点击页面进行选择
                     </div>
                     
-                    <div class="pages-list" id="pagesList">
-                        <!-- 页面列表将在这里动态生成 -->
+                    <div class="pages-container">
+                        <div class="pages-list" id="pagesList">
+                            <!-- 页面列表将在这里动态生成 -->
+                        </div>
                     </div>
                     
-                    <div class="controls">
+                    <div class="page-controls">
                         <button id="moveUpBtn" class="btn btn-small" disabled>
                             <i class="fas fa-arrow-up"></i> 上移
                         </button>
@@ -395,10 +528,21 @@
                         <button id="deleteBtn" class="btn btn-small btn-danger" disabled>
                             <i class="fas fa-trash"></i> 删除
                         </button>
+                        <button id="selectAllBtn" class="btn btn-small">
+                            <i class="fas fa-check-double"></i> 全选
+                        </button>
+                        <button id="deselectAllBtn" class="btn btn-small">
+                            <i class="fas fa-times"></i> 取消全选
+                        </button>
                         <button id="resetBtn" class="btn btn-small">
                             <i class="fas fa-redo"></i> 重置
                         </button>
                     </div>
+                </div>
+                
+                <div id="noFileMessage" style="text-align: center; color: var(--gray-color); padding: 30px;">
+                    <i class="fas fa-file-pdf" style="font-size: 3rem; margin-bottom: 15px; color: #ddd;"></i>
+                    <p>请先上传PDF文件</p>
                 </div>
             </div>
             
@@ -421,17 +565,17 @@
                         <p>正在处理PDF...</p>
                     </div>
                     
-                    <div class="controls">
+                    <div class="preview-controls">
                         <button id="prevPageBtn" class="btn btn-small" disabled>
                             <i class="fas fa-chevron-left"></i> 上一页
                         </button>
-                        <span id="pageCounter">- / -</span>
+                        <span id="pageCounter" class="page-counter">- / -</span>
                         <button id="nextPageBtn" class="btn btn-small" disabled>
                             下一页 <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
                     
-                    <div style="margin-top: 30px;">
+                    <div class="export-controls">
                         <button id="exportBtn" class="btn btn-success" disabled>
                             <i class="fas fa-download"></i> 导出处理后的PDF
                         </button>
@@ -447,7 +591,7 @@
             <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
             <ol>
                 <li><strong>上传PDF</strong>：点击"选择PDF文件"按钮或拖拽PDF文件到上传区域</li>
-                <li><strong>管理页面</strong>：在左侧页面列表中，选择页面并执行操作：调整顺序、删除页面</li>
+                <li><strong>管理页面</strong>：在页面管理区域，点击选择页面，然后执行操作：调整顺序、删除页面</li>
                 <li><strong>预览</strong>：右侧可以预览PDF页面，使用上下页按钮导航</li>
                 <li><strong>导出</strong>：完成页面调整后，点击"导出处理后的PDF"下载新文件</li>
                 <li><strong>注意</strong>：所有操作均在浏览器端完成，文件不会上传到任何服务器，保护您的隐私</li>
@@ -466,14 +610,17 @@
         let currentPage = 1;
         let totalPages = 0;
         let pageOrder = [];
-        let selectedPage = null;
+        let selectedPages = new Set();
         
         // DOM元素
         const pdfInput = document.getElementById('pdfInput');
         const uploadBtn = document.getElementById('uploadBtn');
         const uploadArea = document.getElementById('uploadArea');
+        const fileInfo = document.getElementById('fileInfo');
         const fileName = document.getElementById('fileName');
+        const pageCount = document.getElementById('pageCount');
         const pageManagement = document.getElementById('pageManagement');
+        const noFileMessage = document.getElementById('noFileMessage');
         const pagesList = document.getElementById('pagesList');
         const pdfPreview = document.getElementById('pdfPreview');
         const loading = document.getElementById('loading');
@@ -483,6 +630,8 @@
         const moveUpBtn = document.getElementById('moveUpBtn');
         const moveDownBtn = document.getElementById('moveDownBtn');
         const deleteBtn = document.getElementById('deleteBtn');
+        const selectAllBtn = document.getElementById('selectAllBtn');
+        const deselectAllBtn = document.getElementById('deselectAllBtn');
         const resetBtn = document.getElementById('resetBtn');
         const exportBtn = document.getElementById('exportBtn');
         const clearBtn = document.getElementById('clearBtn');
@@ -516,9 +665,11 @@
         prevPageBtn.addEventListener('click', () => changePage(-1));
         nextPageBtn.addEventListener('click', () => changePage(1));
         
-        moveUpBtn.addEventListener('click', movePageUp);
-        moveDownBtn.addEventListener('click', movePageDown);
-        deleteBtn.addEventListener('click', deleteSelectedPage);
+        moveUpBtn.addEventListener('click', moveSelectedPagesUp);
+        moveDownBtn.addEventListener('click', moveSelectedPagesDown);
+        deleteBtn.addEventListener('click', deleteSelectedPages);
+        selectAllBtn.addEventListener('click', selectAllPages);
+        deselectAllBtn.addEventListener('click', deselectAllPages);
         resetBtn.addEventListener('click', resetToOriginal);
         exportBtn.addEventListener('click', exportPDF);
         clearBtn.addEventListener('click', clearAll);
@@ -541,7 +692,8 @@
                 return;
             }
             
-            fileName.textContent = `已选择: ${file.name}`;
+            fileName.textContent = file.name;
+            fileInfo.style.display = 'flex';
             loadPDF(file);
         }
         
@@ -562,6 +714,10 @@
                     
                     // 初始化页面顺序
                     pageOrder = Array.from({length: totalPages}, (_, i) => i + 1);
+                    selectedPages.clear();
+                    
+                    // 更新页面计数
+                    pageCount.textContent = `${totalPages} 页`;
                     
                     // 渲染页面列表
                     renderPageList();
@@ -572,6 +728,7 @@
                     
                     // 更新UI
                     pageManagement.style.display = 'block';
+                    noFileMessage.style.display = 'none';
                     exportBtn.disabled = false;
                     prevPageBtn.disabled = true;
                     nextPageBtn.disabled = totalPages <= 1;
@@ -594,27 +751,25 @@
             pageOrder.forEach((pageNum, index) => {
                 const pageItem = document.createElement('div');
                 pageItem.className = 'page-item';
+                if (selectedPages.has(pageNum)) {
+                    pageItem.classList.add('selected');
+                }
                 pageItem.dataset.page = pageNum;
                 pageItem.dataset.index = index;
-                
-                if (selectedPage === pageNum) {
-                    pageItem.style.backgroundColor = '#e8f4fc';
-                }
                 
                 pageItem.innerHTML = `
                     <div class="drag-handle">
                         <i class="fas fa-bars"></i>
                     </div>
                     <div class="page-preview">
-                        页${pageNum}
+                        ${pageNum}
                     </div>
-                    <div class="page-info">
-                        <div class="page-number">第 ${pageNum} 页</div>
-                        <div>原始页码</div>
+                    <div class="page-number">
+                        第 ${pageNum} 页
                     </div>
                     <div class="page-actions">
-                        <button class="btn btn-small select-btn" data-page="${pageNum}">
-                            <i class="fas fa-check"></i> 选择
+                        <button class="btn btn-small select-page-btn" data-page="${pageNum}">
+                            ${selectedPages.has(pageNum) ? '<i class="fas fa-check"></i>' : '<i class="far fa-square"></i>'}
                         </button>
                     </div>
                 `;
@@ -623,10 +778,21 @@
             });
             
             // 添加选择按钮事件
-            document.querySelectorAll('.select-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+            document.querySelectorAll('.select-page-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     const pageNum = parseInt(this.dataset.page);
-                    selectPage(pageNum);
+                    togglePageSelection(pageNum);
+                });
+            });
+            
+            // 添加页面点击事件
+            document.querySelectorAll('.page-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (!e.target.closest('.select-page-btn') && !e.target.closest('.drag-handle')) {
+                        const pageNum = parseInt(this.dataset.page);
+                        togglePageSelection(pageNum);
+                    }
                 });
             });
             
@@ -635,6 +801,9 @@
             
             // 更新页面计数器
             updatePageCounter();
+            
+            // 更新控制按钮状态
+            updateControlButtons();
         }
         
         // 初始化拖拽功能
@@ -645,7 +814,6 @@
                 const dragHandle = item.querySelector('.drag-handle');
                 
                 dragHandle.addEventListener('mousedown', startDrag);
-                dragHandle.addEventListener('touchstart', startDragTouch);
                 
                 // 防止默认拖拽行为
                 item.setAttribute('draggable', 'false');
@@ -656,7 +824,7 @@
             pagesList.addEventListener('drop', handleDrop);
         }
         
-        // 开始拖拽（鼠标）
+        // 开始拖拽
         function startDrag(e) {
             const pageItem = e.target.closest('.page-item');
             const pageNum = parseInt(pageItem.dataset.page);
@@ -668,50 +836,6 @@
             setTimeout(() => {
                 pageItem.style.opacity = '0.5';
             }, 0);
-        }
-        
-        // 开始拖拽（触摸屏）
-        function startDragTouch(e) {
-            e.preventDefault();
-            const pageItem = e.target.closest('.page-item');
-            const pageNum = parseInt(pageItem.dataset.page);
-            
-            // 为触摸设备创建自定义拖拽
-            pageItem.dataset.dragging = 'true';
-            pageItem.style.opacity = '0.5';
-            
-            // 设置触摸移动和结束事件
-            const touchMoveHandler = (moveEvent) => {
-                moveEvent.preventDefault();
-                // 这里可以添加触摸拖拽的视觉反馈
-            };
-            
-            const touchEndHandler = (endEvent) => {
-                endEvent.preventDefault();
-                pageItem.dataset.dragging = 'false';
-                pageItem.style.opacity = '1';
-                
-                // 找到放置位置
-                const touch = endEvent.changedTouches[0];
-                const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-                const targetItem = elementBelow.closest('.page-item');
-                
-                if (targetItem && targetItem !== pageItem) {
-                    const targetPage = parseInt(targetItem.dataset.page);
-                    const targetIndex = pageOrder.indexOf(targetPage);
-                    const sourceIndex = pageOrder.indexOf(pageNum);
-                    
-                    // 重新排序
-                    movePage(sourceIndex, targetIndex);
-                }
-                
-                // 清理事件监听器
-                document.removeEventListener('touchmove', touchMoveHandler);
-                document.removeEventListener('touchend', touchEndHandler);
-            };
-            
-            document.addEventListener('touchmove', touchMoveHandler);
-            document.addEventListener('touchend', touchEndHandler);
         }
         
         // 允许放置
@@ -755,89 +879,107 @@
             
             // 重新渲染列表
             renderPageList();
-            
-            // 如果移动的是当前选中的页面，更新选择
-            if (selectedPage === movedPage) {
-                selectPage(movedPage);
-            }
         }
         
-        // 选择页面
-        function selectPage(pageNum) {
-            // 更新选中状态
-            selectedPage = pageNum;
+        // 切换页面选择状态
+        function togglePageSelection(pageNum) {
+            if (selectedPages.has(pageNum)) {
+                selectedPages.delete(pageNum);
+            } else {
+                selectedPages.add(pageNum);
+            }
             
-            // 更新按钮状态
-            const currentIndex = pageOrder.indexOf(pageNum);
-            moveUpBtn.disabled = currentIndex === 0;
-            moveDownBtn.disabled = currentIndex === pageOrder.length - 1;
-            deleteBtn.disabled = false;
-            
-            // 渲染页面列表，突出显示选中的页面
             renderPageList();
             
-            // 显示选中的页面
-            const originalPageNum = pageOrder[currentPage - 1];
-            if (originalPageNum !== pageNum) {
-                // 找到页面在原PDF中的位置
-                const pageIndex = pageOrder.indexOf(pageNum);
-                currentPage = pageIndex + 1;
-                renderPage(pageNum);
+            // 如果选中的页面只有一个，显示该页面
+            if (selectedPages.size === 1) {
+                const [selectedPage] = selectedPages;
+                const pageIndex = pageOrder.indexOf(selectedPage);
+                if (pageIndex !== -1) {
+                    currentPage = pageIndex + 1;
+                    renderPage(selectedPage);
+                }
             }
         }
         
-        // 上移页面
-        function movePageUp() {
-            if (selectedPage === null) return;
-            
-            const currentIndex = pageOrder.indexOf(selectedPage);
-            if (currentIndex > 0) {
-                // 交换位置
-                [pageOrder[currentIndex], pageOrder[currentIndex - 1]] = 
-                [pageOrder[currentIndex - 1], pageOrder[currentIndex]];
-                
-                renderPageList();
-                selectPage(selectedPage);
-            }
+        // 选择所有页面
+        function selectAllPages() {
+            pageOrder.forEach(pageNum => {
+                selectedPages.add(pageNum);
+            });
+            renderPageList();
         }
         
-        // 下移页面
-        function movePageDown() {
-            if (selectedPage === null) return;
+        // 取消选择所有页面
+        function deselectAllPages() {
+            selectedPages.clear();
+            renderPageList();
+        }
+        
+        // 上移选中的页面
+        function moveSelectedPagesUp() {
+            if (selectedPages.size === 0) return;
             
-            const currentIndex = pageOrder.indexOf(selectedPage);
-            if (currentIndex < pageOrder.length - 1) {
-                // 交换位置
-                [pageOrder[currentIndex], pageOrder[currentIndex + 1]] = 
-                [pageOrder[currentIndex + 1], pageOrder[currentIndex]];
-                
-                renderPageList();
-                selectPage(selectedPage);
-            }
+            // 获取选中的页面索引并排序
+            const selectedIndices = Array.from(selectedPages)
+                .map(pageNum => pageOrder.indexOf(pageNum))
+                .sort((a, b) => a - b);
+            
+            // 检查是否所有选中的页面都可以上移
+            if (selectedIndices[0] === 0) return;
+            
+            // 上移选中的页面
+            selectedIndices.forEach(index => {
+                const temp = pageOrder[index];
+                pageOrder[index] = pageOrder[index - 1];
+                pageOrder[index - 1] = temp;
+            });
+            
+            renderPageList();
+        }
+        
+        // 下移选中的页面
+        function moveSelectedPagesDown() {
+            if (selectedPages.size === 0) return;
+            
+            // 获取选中的页面索引并排序（从大到小）
+            const selectedIndices = Array.from(selectedPages)
+                .map(pageNum => pageOrder.indexOf(pageNum))
+                .sort((a, b) => b - a);
+            
+            // 检查是否所有选中的页面都可以下移
+            if (selectedIndices[0] === pageOrder.length - 1) return;
+            
+            // 下移选中的页面
+            selectedIndices.forEach(index => {
+                const temp = pageOrder[index];
+                pageOrder[index] = pageOrder[index + 1];
+                pageOrder[index + 1] = temp;
+            });
+            
+            renderPageList();
         }
         
         // 删除选中的页面
-        function deleteSelectedPage() {
-            if (selectedPage === null) return;
+        function deleteSelectedPages() {
+            if (selectedPages.size === 0) return;
             
-            const currentIndex = pageOrder.indexOf(selectedPage);
+            // 从页面顺序中移除选中的页面
+            pageOrder = pageOrder.filter(pageNum => !selectedPages.has(pageNum));
             
-            // 从页面顺序中移除
-            pageOrder.splice(currentIndex, 1);
-            
-            // 如果删除了当前显示的页面，显示前一页或第一页
-            if (currentPage > pageOrder.length) {
-                currentPage = pageOrder.length;
-            }
+            // 清除选中的页面
+            selectedPages.clear();
             
             // 更新总页数
             totalPages = pageOrder.length;
             
-            // 重置选择
-            selectedPage = null;
-            moveUpBtn.disabled = true;
-            moveDownBtn.disabled = true;
-            deleteBtn.disabled = true;
+            // 更新页面计数
+            pageCount.textContent = `${totalPages} 页`;
+            
+            // 如果删除了当前显示的页面，显示前一页或第一页
+            if (currentPage > pageOrder.length) {
+                currentPage = Math.max(1, pageOrder.length);
+            }
             
             // 重新渲染
             renderPageList();
@@ -862,12 +1004,10 @@
             
             pageOrder = Array.from({length: pdfDoc.numPages}, (_, i) => i + 1);
             totalPages = pdfDoc.numPages;
+            selectedPages.clear();
             
-            // 重置选择
-            selectedPage = null;
-            moveUpBtn.disabled = true;
-            moveDownBtn.disabled = true;
-            deleteBtn.disabled = true;
+            // 更新页面计数
+            pageCount.textContent = `${totalPages} 页`;
             
             // 重置当前页
             currentPage = 1;
@@ -882,6 +1022,13 @@
             nextPageBtn.disabled = totalPages <= 1;
         }
         
+        // 更新控制按钮状态
+        function updateControlButtons() {
+            moveUpBtn.disabled = selectedPages.size === 0;
+            moveDownBtn.disabled = selectedPages.size === 0;
+            deleteBtn.disabled = selectedPages.size === 0;
+        }
+        
         // 渲染PDF页面
         function renderPage(pageNum) {
             if (!pdfDoc) return;
@@ -889,7 +1036,7 @@
             loading.classList.add('active');
             pdfPreview.innerHTML = '';
             
-            // 获取原始页码（因为pageOrder中存储的是原始页码）
+            // 获取原始页码
             const originalPageNum = pageNum;
             
             pdfDoc.getPage(originalPageNum).then(function(page) {
@@ -995,12 +1142,13 @@
                 currentPage = 1;
                 totalPages = 0;
                 pageOrder = [];
-                selectedPage = null;
+                selectedPages.clear();
                 
                 // 重置UI
                 pdfInput.value = '';
-                fileName.textContent = '';
+                fileInfo.style.display = 'none';
                 pageManagement.style.display = 'none';
+                noFileMessage.style.display = 'block';
                 pdfPreview.innerHTML = '<div><i class="fas fa-file-pdf" style="font-size: 3rem; margin-bottom: 15px;"></i><p>PDF预览将在此处显示</p></div>';
                 pageCounter.textContent = '- / -';
                 
