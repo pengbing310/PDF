@@ -43,19 +43,19 @@
         
         header {
             text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
+            margin-bottom: 25px;
+            padding: 15px;
         }
         
         header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 8px;
+            font-size: 2rem;
+            margin-bottom: 6px;
             font-weight: 600;
             color: var(--primary-color);
         }
         
         header p {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--gray-color);
             max-width: 800px;
             margin: 0 auto;
@@ -65,36 +65,44 @@
             background-color: white;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            padding: 20px;
+            padding: 18px;
             margin-bottom: 25px;
             transition: var(--transition);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .upload-section:hover {
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
         }
         
-        .section-title {
-            font-size: 1.3rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #eee;
+        .upload-container {
             display: flex;
             align-items: center;
+            gap: 20px;
         }
         
-        .section-title i {
-            margin-right: 10px;
+        @media (max-width: 768px) {
+            .upload-container {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
         
         .upload-area {
+            flex: 1;
             border: 2px dashed #ddd;
             border-radius: var(--border-radius);
-            padding: 25px 15px;
+            padding: 20px 15px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
         .upload-area:hover {
@@ -103,35 +111,61 @@
         }
         
         .upload-area i {
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: var(--primary-color);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .upload-area h3 {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--dark-color);
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
         
         .upload-area p {
             color: var(--gray-color);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+        
+        .upload-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 200px;
+        }
+        
+        .file-info {
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
             font-size: 0.9rem;
+        }
+        
+        .file-info div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .file-info span:first-child {
+            font-weight: 600;
+            color: var(--primary-color);
         }
         
         .btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 10px 18px;
             background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             transition: var(--transition);
             text-align: center;
+            white-space: nowrap;
         }
         
         .btn:hover {
@@ -158,7 +192,7 @@
         
         .btn-small {
             padding: 5px 10px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         
         .btn:disabled {
@@ -168,53 +202,26 @@
             box-shadow: none;
         }
         
-        .file-info {
-            margin-top: 15px;
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .file-info span {
-            display: flex;
-            align-items: center;
-        }
-        
-        .file-info i {
-            margin-right: 8px;
-        }
-        
         .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 25px;
-            margin-bottom: 40px;
         }
         
-        @media (max-width: 900px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .panel {
+        .preview-section {
             background-color: white;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             padding: 20px;
             transition: var(--transition);
-            height: fit-content;
         }
         
-        .panel:hover {
+        .preview-section:hover {
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
         }
         
-        .panel-title {
-            font-size: 1.3rem;
+        .section-title {
+            font-size: 1.2rem;
             color: var(--primary-color);
             margin-bottom: 15px;
             padding-bottom: 8px;
@@ -223,8 +230,71 @@
             align-items: center;
         }
         
-        .panel-title i {
+        .section-title i {
             margin-right: 10px;
+        }
+        
+        .preview-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .preview-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .pdf-preview {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            overflow: auto;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-color);
+        }
+        
+        .preview-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .page-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .page-counter {
+            font-weight: 600;
+            color: var(--dark-color);
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .export-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .pages-management {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            transition: var(--transition);
+        }
+        
+        .pages-management:hover {
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
         }
         
         .pages-container {
@@ -232,22 +302,23 @@
         }
         
         .pages-list {
-            max-height: 320px;
+            max-height: 280px;
             overflow-y: auto;
             border: 1px solid #eee;
             border-radius: var(--border-radius);
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
             gap: 10px;
             padding: 15px;
             background-color: #f9f9f9;
+            min-height: 180px;
         }
         
         .page-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 12px 8px;
+            padding: 10px 5px;
             border-radius: 6px;
             background-color: white;
             border: 2px solid transparent;
@@ -258,7 +329,7 @@
         
         .page-item:hover {
             border-color: #ddd;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
@@ -268,8 +339,8 @@
         }
         
         .page-preview {
-            width: 70px;
-            height: 90px;
+            width: 60px;
+            height: 75px;
             background-color: #f1f5f9;
             border-radius: 4px;
             display: flex;
@@ -278,79 +349,53 @@
             font-weight: bold;
             color: var(--primary-color);
             overflow: hidden;
-            margin-bottom: 8px;
-            font-size: 2.5rem;
+            margin-bottom: 6px;
+            font-size: 2rem;
         }
         
         .page-number {
             font-weight: 600;
             color: var(--dark-color);
-            font-size: 0.9rem;
-            margin-bottom: 4px;
+            font-size: 0.85rem;
+            margin-bottom: 2px;
         }
         
         .page-actions {
             display: flex;
-            gap: 5px;
-            margin-top: 5px;
+            gap: 4px;
+            margin-top: 4px;
         }
         
         .drag-handle {
             position: absolute;
-            top: 5px;
-            left: 5px;
+            top: 3px;
+            left: 3px;
             color: var(--gray-color);
             cursor: move;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
         
-        .page-controls {
+        .pages-controls {
             display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
             flex-wrap: wrap;
-        }
-        
-        .preview-container {
-            text-align: center;
-        }
-        
-        .pdf-preview {
-            width: 100%;
-            height: 380px;
-            border: 1px solid #eee;
-            border-radius: var(--border-radius);
-            overflow: auto;
-            margin-bottom: 15px;
-            background-color: #f8f9fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray-color);
-        }
-        
-        .preview-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
+            gap: 8px;
             margin-top: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .page-counter {
-            font-weight: 600;
-            color: var(--dark-color);
-            min-width: 80px;
-            text-align: center;
-        }
-        
-        .export-controls {
-            display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
+        }
+        
+        .drag-instruction {
+            text-align: center;
+            color: var(--gray-color);
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .drag-instruction i {
+            color: var(--primary-color);
         }
         
         .loading {
@@ -384,88 +429,73 @@
             padding: 15px;
             margin-top: 25px;
             border-radius: 0 var(--border-radius) var(--border-radius) 0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         
         .instructions h3 {
             color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-size: 1rem;
         }
         
         .instructions ol {
-            padding-left: 20px;
+            padding-left: 18px;
         }
         
         .instructions li {
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
         
         footer {
             text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
+            margin-top: 30px;
+            padding-top: 15px;
             border-top: 1px solid #ddd;
             color: var(--gray-color);
-            font-size: 0.85rem;
-        }
-        
-        .drag-instruction {
-            text-align: center;
-            color: var(--gray-color);
-            font-size: 0.9rem;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .drag-instruction i {
-            color: var(--primary-color);
+            font-size: 0.8rem;
         }
         
         /* 响应式调整 */
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
+            .upload-section {
+                padding: 15px;
             }
             
-            .panel, .upload-section {
+            .preview-section, .pages-management {
                 padding: 15px;
             }
             
             .pages-list {
-                grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
                 padding: 10px;
+                gap: 8px;
             }
             
             .page-preview {
-                width: 60px;
-                height: 75px;
-                font-size: 2rem;
+                width: 55px;
+                height: 70px;
+                font-size: 1.8rem;
             }
             
-            .page-controls, .export-controls {
+            .pages-controls {
                 flex-direction: column;
                 align-items: center;
             }
             
             .btn {
                 width: 100%;
-                margin-bottom: 8px;
             }
         }
         
         @media (max-width: 480px) {
             .pages-list {
-                grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
             }
             
             .page-preview {
                 width: 50px;
-                height: 65px;
-                font-size: 1.8rem;
+                height: 60px;
+                font-size: 1.6rem;
             }
         }
     </style>
@@ -478,47 +508,101 @@
             <p>在浏览器端调整PDF页面顺序和删除页面 - 完全免费，无需上传，保护您的隐私</p>
         </header>
         
-        <!-- 上传和管理PDF区域 -->
+        <!-- 上传区域 - 顶部紧凑设计 -->
         <div class="upload-section">
-            <div class="section-title">
-                <i class="fas fa-upload"></i> 上传和管理PDF
-            </div>
-            
-            <div id="uploadArea" class="upload-area">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <h3>点击或拖拽上传PDF文件</h3>
-                <p>支持最大25MB的PDF文件</p>
-                <button id="uploadBtn" class="btn">
-                    <i class="fas fa-folder-open"></i> 选择PDF文件
-                </button>
-                <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
-            </div>
-            
-            <div id="fileInfo" class="file-info" style="display: none;">
-                <span><i class="fas fa-file-pdf"></i> <span id="fileName">未选择文件</span></span>
-                <span><i class="fas fa-layer-group"></i> <span id="pageCount">0 页</span></span>
+            <div class="upload-container">
+                <div id="uploadArea" class="upload-area">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>点击或拖拽上传PDF文件</h3>
+                    <p>支持最大25MB的PDF文件</p>
+                    <button id="uploadBtn" class="btn btn-small">
+                        <i class="fas fa-folder-open"></i> 选择PDF文件
+                    </button>
+                    <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
+                </div>
+                
+                <div class="upload-actions">
+                    <div id="fileInfo" class="file-info" style="display: none;">
+                        <div>
+                            <span><i class="fas fa-file-pdf"></i> 文件名:</span>
+                            <span id="fileName">未选择</span>
+                        </div>
+                        <div>
+                            <span><i class="fas fa-layer-group"></i> 总页数:</span>
+                            <span id="pageCount">0 页</span>
+                        </div>
+                    </div>
+                    
+                    <button id="clearBtn" class="btn btn-danger">
+                        <i class="fas fa-times"></i> 清除所有
+                    </button>
+                </div>
             </div>
         </div>
         
         <div class="main-content">
-            <!-- 左侧：页面管理 -->
-            <div class="panel">
-                <div class="panel-title">
+            <!-- 预览区域 -->
+            <div class="preview-section">
+                <div class="section-title">
+                    <i class="fas fa-eye"></i> PDF预览
+                </div>
+                
+                <div class="preview-container">
+                    <div id="pdfPreview" class="pdf-preview">
+                        <div>
+                            <i class="fas fa-file-pdf" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                            <p>请先上传PDF文件</p>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-controls">
+                        <div id="loading" class="loading">
+                            <div class="spinner"></div>
+                            <p>正在处理PDF...</p>
+                        </div>
+                        
+                        <div class="page-navigation">
+                            <button id="prevPageBtn" class="btn btn-small" disabled>
+                                <i class="fas fa-chevron-left"></i> 上一页
+                            </button>
+                            <span id="pageCounter" class="page-counter">- / -</span>
+                            <button id="nextPageBtn" class="btn btn-small" disabled>
+                                下一页 <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="export-actions">
+                            <button id="exportBtn" class="btn btn-success" disabled>
+                                <i class="fas fa-download"></i> 导出处理后的PDF
+                            </button>
+                            <div class="drag-instruction">
+                                <i class="fas fa-info-circle"></i> 在下方页面列表中拖拽页面以调整顺序
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 页面管理区域 - 底部 -->
+            <div class="pages-management">
+                <div class="section-title">
                     <i class="fas fa-cogs"></i> 页面管理
                 </div>
                 
                 <div id="pageManagement" style="display: none;">
-                    <div class="drag-instruction">
-                        <i class="fas fa-arrows-alt"></i> 拖拽页面以调整顺序，点击页面进行选择
-                    </div>
-                    
                     <div class="pages-container">
                         <div class="pages-list" id="pagesList">
                             <!-- 页面列表将在这里动态生成 -->
                         </div>
                     </div>
                     
-                    <div class="page-controls">
+                    <div class="pages-controls">
+                        <button id="selectAllBtn" class="btn btn-small">
+                            <i class="fas fa-check-double"></i> 全选
+                        </button>
+                        <button id="deselectAllBtn" class="btn btn-small">
+                            <i class="fas fa-times"></i> 取消全选
+                        </button>
                         <button id="moveUpBtn" class="btn btn-small" disabled>
                             <i class="fas fa-arrow-up"></i> 上移
                         </button>
@@ -528,61 +612,15 @@
                         <button id="deleteBtn" class="btn btn-small btn-danger" disabled>
                             <i class="fas fa-trash"></i> 删除
                         </button>
-                        <button id="selectAllBtn" class="btn btn-small">
-                            <i class="fas fa-check-double"></i> 全选
-                        </button>
-                        <button id="deselectAllBtn" class="btn btn-small">
-                            <i class="fas fa-times"></i> 取消全选
-                        </button>
                         <button id="resetBtn" class="btn btn-small">
-                            <i class="fas fa-redo"></i> 重置
+                            <i class="fas fa-redo"></i> 重置顺序
                         </button>
                     </div>
                 </div>
                 
-                <div id="noFileMessage" style="text-align: center; color: var(--gray-color); padding: 30px;">
-                    <i class="fas fa-file-pdf" style="font-size: 3rem; margin-bottom: 15px; color: #ddd;"></i>
-                    <p>请先上传PDF文件</p>
-                </div>
-            </div>
-            
-            <!-- 右侧：预览和导出 -->
-            <div class="panel">
-                <div class="panel-title">
-                    <i class="fas fa-eye"></i> 预览和导出
-                </div>
-                
-                <div class="preview-container">
-                    <div id="pdfPreview" class="pdf-preview">
-                        <div>
-                            <i class="fas fa-file-pdf" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                            <p>PDF预览将在此处显示</p>
-                        </div>
-                    </div>
-                    
-                    <div id="loading" class="loading">
-                        <div class="spinner"></div>
-                        <p>正在处理PDF...</p>
-                    </div>
-                    
-                    <div class="preview-controls">
-                        <button id="prevPageBtn" class="btn btn-small" disabled>
-                            <i class="fas fa-chevron-left"></i> 上一页
-                        </button>
-                        <span id="pageCounter" class="page-counter">- / -</span>
-                        <button id="nextPageBtn" class="btn btn-small" disabled>
-                            下一页 <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="export-controls">
-                        <button id="exportBtn" class="btn btn-success" disabled>
-                            <i class="fas fa-download"></i> 导出处理后的PDF
-                        </button>
-                        <button id="clearBtn" class="btn btn-danger">
-                            <i class="fas fa-times"></i> 清除所有
-                        </button>
-                    </div>
+                <div id="noFileMessage" style="text-align: center; color: var(--gray-color); padding: 20px;">
+                    <i class="fas fa-file-pdf" style="font-size: 2.5rem; margin-bottom: 10px; color: #ddd;"></i>
+                    <p>上传PDF文件后，页面管理功能将在此处显示</p>
                 </div>
             </div>
         </div>
@@ -592,7 +630,7 @@
             <ol>
                 <li><strong>上传PDF</strong>：点击"选择PDF文件"按钮或拖拽PDF文件到上传区域</li>
                 <li><strong>管理页面</strong>：在页面管理区域，点击选择页面，然后执行操作：调整顺序、删除页面</li>
-                <li><strong>预览</strong>：右侧可以预览PDF页面，使用上下页按钮导航</li>
+                <li><strong>预览</strong>：在上方预览区域查看PDF页面，使用上下页按钮导航</li>
                 <li><strong>导出</strong>：完成页面调整后，点击"导出处理后的PDF"下载新文件</li>
                 <li><strong>注意</strong>：所有操作均在浏览器端完成，文件不会上传到任何服务器，保护您的隐私</li>
             </ol>
@@ -643,7 +681,7 @@
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.style.borderColor = '#4a6fa5';
-            uploadArea.style.backgroundColor = 'rgba(74, 111, 165, 0.1)';
+            uploadArea.style.backgroundColor = 'rgba(74, 111, 165, 0.05)';
         });
         
         uploadArea.addEventListener('dragleave', () => {
@@ -692,8 +730,8 @@
                 return;
             }
             
-            fileName.textContent = file.name;
-            fileInfo.style.display = 'flex';
+            fileName.textContent = file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name;
+            fileInfo.style.display = 'block';
             loadPDF(file);
         }
         
@@ -765,10 +803,10 @@
                         ${pageNum}
                     </div>
                     <div class="page-number">
-                        第 ${pageNum} 页
+                        页${pageNum}
                     </div>
                     <div class="page-actions">
-                        <button class="btn btn-small select-page-btn" data-page="${pageNum}">
+                        <button class="btn btn-small select-page-btn" data-page="${pageNum}" style="padding: 3px 8px; font-size: 0.75rem;">
                             ${selectedPages.has(pageNum) ? '<i class="fas fa-check"></i>' : '<i class="far fa-square"></i>'}
                         </button>
                     </div>
@@ -1149,7 +1187,7 @@
                 fileInfo.style.display = 'none';
                 pageManagement.style.display = 'none';
                 noFileMessage.style.display = 'block';
-                pdfPreview.innerHTML = '<div><i class="fas fa-file-pdf" style="font-size: 3rem; margin-bottom: 15px;"></i><p>PDF预览将在此处显示</p></div>';
+                pdfPreview.innerHTML = '<div><i class="fas fa-file-pdf" style="font-size: 3rem; margin-bottom: 15px;"></i><p>请先上传PDF文件</p></div>';
                 pageCounter.textContent = '- / -';
                 
                 // 重置按钮状态
