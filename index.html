@@ -16,6 +16,7 @@
             --dark-color: #343a40;
             --gray-color: #6c757d;
             --danger-color: #e74c3c;
+            --warning-color: #f39c12;
             --border-radius: 8px;
             --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
@@ -67,7 +68,7 @@
             gap: 10px;
             margin: 0;
             height: 100%;
-            line-height: 70px; /* 确保垂直居中 */
+            line-height: 70px;
         }
         
         .upload-section-compact {
@@ -196,6 +197,14 @@
         
         .btn-success:hover {
             background-color: #3da88a;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
         }
         
         .btn-small {
@@ -361,6 +370,22 @@
             background-color: rgba(74, 111, 165, 0.1);
         }
         
+        .page-item.rotated {
+            position: relative;
+        }
+        
+        .page-item.rotated::after {
+            content: '↻';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background-color: var(--warning-color);
+            color: white;
+            font-size: 0.6rem;
+            padding: 1px 3px;
+            border-radius: 3px;
+        }
+        
         .page-preview {
             width: 50px;
             height: 65px;
@@ -374,6 +399,7 @@
             overflow: hidden;
             margin-bottom: 5px;
             font-size: 1.6rem;
+            position: relative;
         }
         
         .page-number {
@@ -404,6 +430,17 @@
             gap: 8px;
             margin-top: 15px;
             justify-content: center;
+        }
+        
+        .rotation-controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+        
+        .rotation-controls .btn-small {
+            padding: 3px 8px;
         }
         
         .loading {
@@ -511,7 +548,7 @@
                 height: 500px;
             }
             
-            .pages-controls {
+            .pages-controls, .rotation-controls {
                 flex-direction: column;
                 align-items: center;
             }
@@ -647,7 +684,7 @@
                         </div>
                         
                         <div class="drag-instruction">
-                            <i class="fas fa-info-circle"></i> 在下方页面列表中拖拽页面以调整顺序
+                            <i class="fas fa-info-circle"></i> 在下方页面列表中拖拽页面以调整顺序，选择页面后可进行旋转操作
                         </div>
                     </div>
                 </div>
@@ -664,6 +701,16 @@
                         <div class="pages-list" id="pagesList">
                             <!-- 页面列表将在这里动态生成 -->
                         </div>
+                    </div>
+                    
+                    <!-- 旋转控制按钮 -->
+                    <div class="rotation-controls">
+                        <button id="rotateLeftBtn" class="btn btn-small btn-warning" disabled>
+                            <i class="fas fa-undo"></i> 左转90°
+                        </button>
+                        <button id="rotateRightBtn" class="btn btn-small btn-warning" disabled>
+                            <i class="fas fa-redo"></i> 右转90°
+                        </button>
                     </div>
                     
                     <div class="pages-controls">
@@ -699,7 +746,7 @@
             <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
             <ol>
                 <li><strong>上传PDF</strong>：点击"选择文件"按钮或拖拽PDF文件到上传区域</li>
-                <li><strong>管理页面</strong>：在下方页面管理区域，点击选择页面，然后执行操作：调整顺序、删除页面</li>
+                <li><strong>管理页面</strong>：在下方页面管理区域，点击选择页面，然后执行操作：调整顺序、删除页面、旋转页面</li>
                 <li><strong>预览</strong>：在上方预览区域查看PDF页面，使用上下页按钮导航</li>
                 <li><strong>导出</strong>：完成页面调整后，点击"导出PDF"下载新文件</li>
                 <li><strong>注意</strong>：所有操作均在浏览器端完成，文件不会上传到任何服务器，保护您的隐私</li>
@@ -719,6 +766,7 @@
         let totalPages = 0;
         let pageOrder = [];
         let selectedPages = new Set();
+        let pageRotations = {}; // 存储页面旋转角度：0=0°, 1=90°, 2=180°, 3=270°
         
         // DOM元素
         const pdfInput = document.getElementById('pdfInput');
@@ -743,6 +791,8 @@
         const resetBtn = document.getElementById('resetBtn');
         const exportBtn = document.getElementById('exportBtn');
         const clearBtn = document.getElementById('clearBtn');
+        const rotateLeftBtn = document.getElementById('rotateLeftBtn');
+        const rotateRightBtn = document.getElementById('rotateRightBtn');
         
         // 事件监听器
         uploadBtn.addEventListener('click', () => pdfInput.click());
@@ -781,6 +831,8 @@
         resetBtn.addEventListener('click', resetToOriginal);
         exportBtn.addEventListener('click', exportPDF);
         clearBtn.addEventListener('click', clearAll);
+        rotateLeftBtn.addEventListener('click', rotateSelectedPagesLeft);
+        rotateRightBtn.addEventListener('click', rotateSelectedPagesRight);
         
         // 处理文件选择
         function handleFileSelect() {
@@ -829,6 +881,12 @@
                     pageOrder = Array.from({length: totalPages}, (_, i) => i + 1);
                     selectedPages.clear();
                     
+                    // 初始化旋转角度
+                    pageRotations = {};
+                    for (let i = 1; i <= totalPages; i++) {
+                        pageRotations[i] = 0; // 0度
+                    }
+                    
                     // 更新页面计数
                     pageCount.textContent = `${totalPages} 页`;
                     
@@ -867,18 +925,27 @@
                 if (selectedPages.has(pageNum)) {
                     pageItem.classList.add('selected');
                 }
+                
+                // 如果页面有旋转，添加旋转标记
+                if (pageRotations[pageNum] && pageRotations[pageNum] > 0) {
+                    pageItem.classList.add('rotated');
+                }
+                
                 pageItem.dataset.page = pageNum;
                 pageItem.dataset.index = index;
+                
+                // 获取旋转角度
+                const rotation = pageRotations[pageNum] || 0;
                 
                 pageItem.innerHTML = `
                     <div class="drag-handle">
                         <i class="fas fa-bars"></i>
                     </div>
-                    <div class="page-preview">
+                    <div class="page-preview" style="transform: rotate(${rotation * 90}deg);">
                         ${pageNum}
                     </div>
                     <div class="page-number">
-                        页${pageNum}
+                        页${pageNum} ${rotation > 0 ? `(${rotation * 90}°)` : ''}
                     </div>
                     <div class="page-actions">
                         <button class="btn btn-small select-page-btn" data-page="${pageNum}" style="padding: 2px 5px; font-size: 0.65rem;">
@@ -1073,12 +1140,63 @@
             renderPageList();
         }
         
+        // 左转选中的页面
+        function rotateSelectedPagesLeft() {
+            if (selectedPages.size === 0) return;
+            
+            // 对每个选中的页面进行左转
+            selectedPages.forEach(pageNum => {
+                // 减少90度（逆时针）
+                pageRotations[pageNum] = (pageRotations[pageNum] - 1 + 4) % 4;
+            });
+            
+            renderPageList();
+            
+            // 如果只有一个选中的页面，重新渲染预览
+            if (selectedPages.size === 1) {
+                const [selectedPage] = selectedPages;
+                const pageIndex = pageOrder.indexOf(selectedPage);
+                if (pageIndex !== -1) {
+                    currentPage = pageIndex + 1;
+                    renderPage(selectedPage);
+                }
+            }
+        }
+        
+        // 右转选中的页面
+        function rotateSelectedPagesRight() {
+            if (selectedPages.size === 0) return;
+            
+            // 对每个选中的页面进行右转
+            selectedPages.forEach(pageNum => {
+                // 增加90度（顺时针）
+                pageRotations[pageNum] = (pageRotations[pageNum] + 1) % 4;
+            });
+            
+            renderPageList();
+            
+            // 如果只有一个选中的页面，重新渲染预览
+            if (selectedPages.size === 1) {
+                const [selectedPage] = selectedPages;
+                const pageIndex = pageOrder.indexOf(selectedPage);
+                if (pageIndex !== -1) {
+                    currentPage = pageIndex + 1;
+                    renderPage(selectedPage);
+                }
+            }
+        }
+        
         // 删除选中的页面
         function deleteSelectedPages() {
             if (selectedPages.size === 0) return;
             
             // 从页面顺序中移除选中的页面
             pageOrder = pageOrder.filter(pageNum => !selectedPages.has(pageNum));
+            
+            // 从旋转记录中删除选中的页面
+            selectedPages.forEach(pageNum => {
+                delete pageRotations[pageNum];
+            });
             
             // 清除选中的页面
             selectedPages.clear();
@@ -1119,6 +1237,12 @@
             totalPages = pdfDoc.numPages;
             selectedPages.clear();
             
+            // 重置旋转角度
+            pageRotations = {};
+            for (let i = 1; i <= totalPages; i++) {
+                pageRotations[i] = 0;
+            }
+            
             // 更新页面计数
             pageCount.textContent = `${totalPages} 页`;
             
@@ -1140,9 +1264,11 @@
             moveUpBtn.disabled = selectedPages.size === 0;
             moveDownBtn.disabled = selectedPages.size === 0;
             deleteBtn.disabled = selectedPages.size === 0;
+            rotateLeftBtn.disabled = selectedPages.size === 0;
+            rotateRightBtn.disabled = selectedPages.size === 0;
         }
         
-        // 渲染PDF页面 - 优化显示，自动调整缩放
+        // 渲染PDF页面 - 优化显示，自动调整缩放，支持旋转
         function renderPage(pageNum) {
             if (!pdfDoc) return;
             
@@ -1155,15 +1281,27 @@
             pdfDoc.getPage(originalPageNum).then(function(page) {
                 // 计算适合预览区域的最佳缩放比例
                 const viewport = page.getViewport({scale: 1});
-                const containerWidth = pdfPreview.clientWidth - 40; // 减去内边距
+                const containerWidth = pdfPreview.clientWidth - 40;
                 const containerHeight = pdfPreview.clientHeight - 40;
                 
-                // 计算适合容器的缩放比例
-                const scaleX = containerWidth / viewport.width;
-                const scaleY = containerHeight / viewport.height;
-                const scale = Math.min(scaleX, scaleY, 1.5); // 限制最大缩放为1.5
+                // 考虑旋转对显示尺寸的影响
+                let displayWidth = viewport.width;
+                let displayHeight = viewport.height;
                 
-                const scaledViewport = page.getViewport({scale: scale});
+                // 获取旋转角度
+                const rotation = pageRotations[pageNum] || 0;
+                
+                // 如果旋转了90度或270度，交换宽高
+                if (rotation % 2 === 1) {
+                    [displayWidth, displayHeight] = [displayHeight, displayWidth];
+                }
+                
+                // 计算适合容器的缩放比例
+                const scaleX = containerWidth / displayWidth;
+                const scaleY = containerHeight / displayHeight;
+                const scale = Math.min(scaleX, scaleY, 1.5);
+                
+                const scaledViewport = page.getViewport({scale: scale, rotation: rotation * 90});
                 
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
@@ -1213,7 +1351,7 @@
             pageCounter.textContent = `${currentPage} / ${totalPages}`;
         }
         
-        // 导出PDF
+        // 导出PDF - 支持页面旋转
         async function exportPDF() {
             if (!pdfDoc || pageOrder.length === 0) return;
             
@@ -1230,9 +1368,16 @@
                 // 创建新的PDF文档
                 const newPdfDoc = await PDFDocument.create();
                 
-                // 按新顺序复制页面
+                // 按新顺序复制页面，并应用旋转
                 for (const pageNum of pageOrder) {
                     const [copiedPage] = await newPdfDoc.copyPages(pdfDocNew, [pageNum - 1]);
+                    
+                    // 应用旋转角度
+                    const rotation = pageRotations[pageNum] || 0;
+                    if (rotation > 0) {
+                        copiedPage.setRotation(rotation * 90);
+                    }
+                    
                     newPdfDoc.addPage(copiedPage);
                 }
                 
@@ -1269,6 +1414,7 @@
                 totalPages = 0;
                 pageOrder = [];
                 selectedPages.clear();
+                pageRotations = {};
                 
                 // 重置UI
                 pdfInput.value = '';
@@ -1288,13 +1434,15 @@
                 moveUpBtn.disabled = true;
                 moveDownBtn.disabled = true;
                 deleteBtn.disabled = true;
+                rotateLeftBtn.disabled = true;
+                rotateRightBtn.disabled = true;
                 exportBtn.disabled = true;
             }
         }
         
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('PDF处理工具已加载');
+            console.log('PDF处理工具已加载，新增旋转功能');
         });
     </script>
 </body>
