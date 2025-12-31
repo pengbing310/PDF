@@ -1394,10 +1394,19 @@
                     // 应用旋转角度
                     const rotation = pageRotations[pageNum] || 0;
                     if (rotation > 0) {
-                        // PDF-Lib中的旋转是顺时针角度：0, 90, 180, 270
+                        // PDF-Lib中的setRotation方法只接受特定值：0, 90, 180, 270
                         // 我们存储的rotation值：0=0°, 1=90°, 2=180°, 3=270°
                         const rotationAngle = rotation * 90;
-                        copiedPage.setRotation(rotationAngle);
+                        
+                        // 检查是否为有效角度
+                        if ([0, 90, 180, 270].includes(rotationAngle)) {
+                            // 首先获取页面的原始旋转
+                            const originalRotation = copiedPage.getRotation().angle || 0;
+                            
+                            // 设置新的旋转角度
+                            // PDF-Lib的setRotation方法接受角度值
+                            copiedPage.setRotation(rotationAngle);
+                        }
                     }
                     
                     newPdfDoc.addPage(copiedPage);
@@ -1413,9 +1422,10 @@
                 a.href = url;
                 
                 // 生成文件名
-                const originalFileName = pdfInput.files[0].name.replace('.pdf', '');
+                const originalFileName = pdfInput.files[0].name;
+                const baseName = originalFileName.replace('.pdf', '');
                 const timestamp = new Date().getTime();
-                a.download = `processed_${originalFileName}_${timestamp}.pdf`;
+                a.download = `processed_${baseName}_${timestamp}.pdf`;
                 
                 document.body.appendChild(a);
                 a.click();
